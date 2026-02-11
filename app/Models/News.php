@@ -29,5 +29,13 @@ class News extends Model
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
+
+    /**
+     * Get the category that owns the news
+     */
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }
 

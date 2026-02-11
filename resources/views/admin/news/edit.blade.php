@@ -51,6 +51,13 @@
                         'value' => old('thumbnail', $news->thumbnail),
                     ],
                     [
+                        'name' => 'category_id',
+                        'label' => 'Category',
+                        'type' => 'select',
+                        'options' => ['' => 'Select Category'] + $categories->pluck('name', 'id')->toArray(),
+                        'value' => old('category_id', $news->category_id),
+                    ],
+                    [
                         'name' => 'status',
                         'label' => 'Status',
                         'type' => 'select',

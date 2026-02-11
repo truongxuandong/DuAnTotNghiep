@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\CategoryController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -26,3 +27,14 @@ Route::get('admin/news/{news}/edit', [NewsController::class, 'edit'])->name('adm
 Route::put('admin/news/{news}', [NewsController::class, 'update'])->name('admin.news.update');
 Route::patch('admin/news/{news}/status', [NewsController::class, 'updateStatus'])->name('admin.news.updateStatus');
 Route::delete('admin/news/{news}', [NewsController::class, 'destroy'])->name('admin.news.destroy');
+
+// Admin categories module
+Route::get('admin/categories', [CategoryController::class, 'index'])->name('admin.categories.index');
+Route::get('admin/categories/create', [CategoryController::class, 'create'])->name('admin.categories.create');
+Route::post('admin/categories', [CategoryController::class, 'store'])->name('admin.categories.store');
+// Unified form route with mode parameter (create/edit/view)
+Route::get('admin/categories/form/{category}', [CategoryController::class, 'form'])->name('admin.categories.form');
+Route::get('admin/categories/{category}', [CategoryController::class, 'show'])->name('admin.categories.show');
+Route::get('admin/categories/{category}/edit', [CategoryController::class, 'edit'])->name('admin.categories.edit');
+Route::put('admin/categories/{category}', [CategoryController::class, 'update'])->name('admin.categories.update');
+Route::delete('admin/categories/{category}', [CategoryController::class, 'destroy'])->name('admin.categories.destroy');
