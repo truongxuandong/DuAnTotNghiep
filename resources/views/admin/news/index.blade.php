@@ -25,7 +25,7 @@
                 $columns = [
                     ['label' => '#', 'key' => '__index', 'class' => 'w-12', 'td_class' => 'font-medium'],
                     ['label' => 'Title', 'key' => 'title'],
-                    ['label' => 'Slug', 'key' => 'slug'],
+                    ['label' => 'Category', 'key' => 'category.name'],
                     ['label' => 'Status', 'key' => 'status', 'type' => 'status-select'],
                     ['label' => 'Published At', 'key' => 'published_at'],
                     ['label' => 'Views', 'key' => 'views'],

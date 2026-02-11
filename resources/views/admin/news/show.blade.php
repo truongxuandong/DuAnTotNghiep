@@ -67,6 +67,18 @@
 
         <!-- Content -->
         <div class="p-8">
+            <!-- Category Info -->
+            @if($news->category)
+                <div class="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm font-medium text-gray-500">Category:</span>
+                        <a href="{{ route('admin.categories.show', $news->category->id) }}" class="text-blue-600 hover:underline font-medium">
+                            {{ $news->category->name }}
+                        </a>
+                    </div>
+                </div>
+            @endif
+
             @if($news->thumbnail)
                 <div class="mb-6">
                     <img src="{{ $news->thumbnail }}" alt="{{ $news->title }}" class="w-full rounded-lg shadow-md max-h-96 object-cover">
@@ -92,8 +104,16 @@
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Additional Information</h3>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <span class="text-sm font-medium text-gray-500">Category ID:</span>
-                        <span class="text-sm text-gray-900 ml-2">{{ $news->category_id ?? 'N/A' }}</span>
+                        <span class="text-sm font-medium text-gray-500">Category:</span>
+                        <span class="text-sm text-gray-900 ml-2">
+                            @if($news->category)
+                                <a href="{{ route('admin.categories.show', $news->category->id) }}" class="text-blue-600 hover:underline">
+                                    {{ $news->category->name }}
+                                </a>
+                            @else
+                                N/A
+                            @endif
+                        </span>
                     </div>
                     <div>
                         <span class="text-sm font-medium text-gray-500">Author ID:</span>

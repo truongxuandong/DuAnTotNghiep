@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\News;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class NewsController extends Controller
@@ -12,7 +13,7 @@ class NewsController extends Controller
      */
     public function index(Request $request)
     {
-        $query = News::query()->latest();
+        $query = News::with('category')->latest();
 
         if ($search = $request->get('search')) {
             $query->where(function ($q) use ($search) {
@@ -32,7 +33,8 @@ class NewsController extends Controller
      */
     public function create()
     {
-        return view('admin.news.create');
+        $categories = Category::where('status', true)->orderBy('name')->get();
+        return view('admin.news.create', compact('categories'));
     }
 
     /**
@@ -46,7 +48,7 @@ class NewsController extends Controller
             'summary' => 'nullable|string',
             'content' => 'nullable|string',
             'thumbnail' => 'nullable|string|max:255',
-            'category_id' => 'nullable|integer',
+            'category_id' => 'nullable|integer|exists:categories,id',
             'author_id' => 'nullable|integer',
             'status' => 'required|integer|in:0,1,2',
             'published_at' => 'nullable|date',
@@ -74,6 +76,7 @@ class NewsController extends Controller
      */
     public function show(News $news)
     {
+        $news->load('category');
         return view('admin.news.show', compact('news'));
     }
 
@@ -82,7 +85,8 @@ class NewsController extends Controller
      */
     public function edit(News $news)
     {
-        return view('admin.news.edit', compact('news'));
+        $categories = Category::where('status', true)->orderBy('name')->get();
+        return view('admin.news.edit', compact('news', 'categories'));
     }
 
     /**
@@ -96,7 +100,7 @@ class NewsController extends Controller
             'summary' => 'nullable|string',
             'content' => 'nullable|string',
             'thumbnail' => 'nullable|string|max:255',
-            'category_id' => 'nullable|integer',
+            'category_id' => 'nullable|integer|exists:categories,id',
             'author_id' => 'nullable|integer',
             'status' => 'required|integer|in:0,1,2',
             'published_at' => 'nullable|date',

@@ -56,17 +56,16 @@
                                 $value = is_array($row) ? ($row[$key] ?? '') : ($row->{$key} ?? '');
                             @endphp
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 {{ $col['td_class'] ?? '' }}">
-                                {{-- Cột index (#): dùng index của vòng lặp cha (rows) + offset phân trang nếu có --}}
+                                {{-- Cột index (#): chỉ đếm root categories, không đếm children --}}
                                 @if($key === '__index')
                                     @php
-                                        $rowLoop = $loop->parent ?? null; // vòng lặp foreach $rows
+                                        $rootIndex = is_array($row) ? ($row['root_index'] ?? null) : ($row->root_index ?? null);
                                     @endphp
-                                    @if($rowLoop && is_object($rows) && method_exists($rows, 'firstItem'))
-                                        {{ $rows->firstItem() + $rowLoop->index }}
-                                    @elseif($rowLoop)
-                                        {{ $rowLoop->iteration }}
+                                    @if($rootIndex !== null)
+                                        {{ $rootIndex }}
                                     @else
-                                        {{ $loop->iteration }}
+                                        {{-- Category con không có số thứ tự --}}
+                                        <span class="text-gray-400">-</span>
                                     @endif
                                 @elseif(isset($col['type']) && $col['type'] === 'status')
                                     @php
@@ -80,6 +79,43 @@
                                     <span class="px-2 py-1 rounded text-xs font-medium {{ $status['class'] }}">
                                         {{ $status['text'] }}
                                     </span>
+                                @elseif(isset($col['type']) && $col['type'] === 'status-boolean')
+                                    @if($value)
+                                        <span class="px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-800">Active</span>
+                                    @else
+                                        <span class="px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800">Inactive</span>
+                                    @endif
+                                @elseif(isset($col['type']) && $col['type'] === 'tree-name')
+                                    @php
+                                        $hasChildren = is_array($row) ? ($row['has_children'] ?? false) : ($row->has_children ?? false);
+                                        $isLeaf = is_array($row) ? ($row['is_leaf'] ?? true) : ($row->is_leaf ?? true);
+                                        $level = is_array($row) ? ($row['level'] ?? 0) : ($row->level ?? 0);
+                                        $indent = $level * 24; // 24px per level
+                                        $isChild = $level > 0; // Category con (có level > 0)
+                                        $rowId = is_array($row) ? ($row['id'] ?? '') : ($row->id ?? '');
+                                        // Chỉ hiển thị icon toggle nếu có children (không phải leaf)
+                                        $showToggleIcon = $hasChildren && !$isLeaf;
+                                    @endphp
+                                    <div class="flex items-center" style="padding-left: {{ $isChild ? $indent : 0 }}px;">
+                                        @if($showToggleIcon)
+                                            <button 
+                                                type="button"
+                                                onclick="toggleCategoryTree({{ $rowId }})"
+                                                class="category-toggle w-4 h-4 mr-2 shrink-0 text-gray-500 hover:text-gray-700 transition-transform cursor-pointer"
+                                                data-category-id="{{ $rowId }}"
+                                                data-expanded="false"
+                                                title="Click to expand/collapse"
+                                            >
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                                </svg>
+                                            </button>
+                                        @elseif($isChild)
+                                            {{-- Category con nhưng không có children - không có icon, chỉ có indentation --}}
+                                            <span class="w-4 h-4 mr-2 shrink-0"></span>
+                                        @endif
+                                        <span class="font-medium text-gray-900">{{ $value }}</span>
+                                    </div>
                                 @elseif(isset($col['type']) && $col['type'] === 'status-select')
                                     @php
                                         $rowId = is_array($row) ? ($row['id'] ?? '') : ($row->id ?? '');

@@ -46,6 +46,12 @@
                         'placeholder' => 'https://example.com/image.jpg',
                     ],
                     [
+                        'name' => 'category_id',
+                        'label' => 'Category',
+                        'type' => 'select',
+                        'options' => ['' => 'Select Category'] + $categories->pluck('name', 'id')->toArray(),
+                    ],
+                    [
                         'name' => 'status',
                         'label' => 'Status',
                         'type' => 'select',

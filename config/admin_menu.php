@@ -29,7 +29,7 @@ return [
     [
         'label' => 'Manage Categories',
         'icon' => 'fa-list',
-        'url' => '#',
+        'url' => fn() => route('admin.categories.index'),
     ],
     [
         'label' => 'Manage News',
