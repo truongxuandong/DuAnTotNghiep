@@ -177,6 +177,27 @@
                 </fieldset>
             @endif
 
+            <!-- CHECKBOX GROUP -->
+            @if($fieldType === 'checkbox-group')
+                <div class="space-y-2">
+                    @foreach($field['options'] ?? [] as $optionLabel => $optionValue)
+                        <div class="flex items-center">
+                            <input 
+                                type="checkbox" 
+                                id="{{ $fieldName }}_{{ $optionValue }}"
+                                name="{{ $fieldName }}[]" 
+                                value="{{ $optionValue }}"
+                                class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                                @if(is_array($fieldValue) && in_array($optionValue, $fieldValue)) checked @endif
+                            />
+                            <label for="{{ $fieldName }}_{{ $optionValue }}" class="ml-2 block text-sm text-gray-700">
+                                {{ $optionLabel }}
+                            </label>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+
             <!-- ERROR MESSAGE -->
             @error($fieldName)
                 <p class="mt-2 text-sm text-red-500">{{ $message }}</p>

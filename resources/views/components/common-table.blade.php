@@ -60,12 +60,17 @@
                                 @if($key === '__index')
                                     @php
                                         $rootIndex = is_array($row) ? ($row['root_index'] ?? null) : ($row->root_index ?? null);
+                                        $rowLoop = $loop->parent ?? null; // vòng lặp foreach $rows
                                     @endphp
                                     @if($rootIndex !== null)
                                         {{ $rootIndex }}
+                                    @elseif($rowLoop && is_object($rows) && method_exists($rows, 'firstItem'))
+                                        {{-- Normal pagination index --}}
+                                        {{ $rows->firstItem() + $rowLoop->index }}
+                                    @elseif($rowLoop)
+                                        {{ $rowLoop->iteration }}
                                     @else
-                                        {{-- Category con không có số thứ tự --}}
-                                        <span class="text-gray-400">-</span>
+                                        {{ $loop->iteration }}
                                     @endif
                                 @elseif(isset($col['type']) && $col['type'] === 'status')
                                     @php
@@ -84,6 +89,28 @@
                                         <span class="px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-800">Active</span>
                                     @else
                                         <span class="px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800">Inactive</span>
+                                    @endif
+                                @elseif(isset($col['type']) && $col['type'] === 'roles-list')
+                                    @if(is_array($value) || (is_object($value) && method_exists($value, 'toArray')))
+                                        @php
+                                            $roles = is_array($value) ? $value : $value->toArray();
+                                        @endphp
+                                        @if(count($roles) > 0)
+                                            <div class="flex flex-wrap gap-1">
+                                                @foreach($roles as $role)
+                                                    @php
+                                                        $roleName = is_array($role) ? ($role['name'] ?? '') : ($role->name ?? '');
+                                                    @endphp
+                                                    <span class="px-2 py-1 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                                                        {{ $roleName }}
+                                                    </span>
+                                                @endforeach
+                                            </div>
+                                        @else
+                                            <span class="text-gray-400 text-sm">No roles</span>
+                                        @endif
+                                    @else
+                                        <span class="text-gray-400 text-sm">No roles</span>
                                     @endif
                                 @elseif(isset($col['type']) && $col['type'] === 'tree-name')
                                     @php

@@ -14,7 +14,7 @@ return [
     [
         'label' => 'Manage Users',
         'icon' => 'fa-users',
-        'url' => '#',
+        'url' => fn() => route('admin.users.index'),
     ],
     [
         'label' => 'Manage Promotions',
@@ -49,7 +49,7 @@ return [
     [
         'label' => 'Permissions',
         'icon' => 'fa-lock',
-        'url' => '#',
+        'url' => fn() => route('admin.permissions.index'),
     ],
     [
         'label' => 'Wallets',

@@ -5,6 +5,8 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\PermissionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -38,3 +40,27 @@ Route::get('admin/categories/{category}', [CategoryController::class, 'show'])->
 Route::get('admin/categories/{category}/edit', [CategoryController::class, 'edit'])->name('admin.categories.edit');
 Route::put('admin/categories/{category}', [CategoryController::class, 'update'])->name('admin.categories.update');
 Route::delete('admin/categories/{category}', [CategoryController::class, 'destroy'])->name('admin.categories.destroy');
+
+// Admin users module
+Route::get('admin/users', [UserController::class, 'index'])->name('admin.users.index');
+Route::get('admin/users/create', [UserController::class, 'form'])->name('admin.users.create');
+Route::post('admin/users', [UserController::class, 'store'])->name('admin.users.store');
+Route::get('admin/users/form/{user}', [UserController::class, 'form'])->name('admin.users.form');
+Route::get('admin/users/{user}', [UserController::class, 'form'])->name('admin.users.show');
+Route::get('admin/users/{user}/edit', [UserController::class, 'form'])->name('admin.users.edit');
+Route::put('admin/users/{user}', [UserController::class, 'update'])->name('admin.users.update');
+Route::delete('admin/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
+
+// Admin permissions module
+Route::get('admin/permissions', [PermissionController::class, 'index'])->name('admin.permissions.index');
+Route::get('admin/permissions/roles', [PermissionController::class, 'roles'])->name('admin.permissions.roles');
+Route::get('admin/permissions/permissions', [PermissionController::class, 'permissions'])->name('admin.permissions.permissions');
+Route::get('admin/permissions/roles/{role}', [PermissionController::class, 'showRole'])->name('admin.permissions.roles.show');
+Route::post('admin/permissions/roles', [PermissionController::class, 'storeRole'])->name('admin.permissions.roles.store');
+Route::put('admin/permissions/roles/{role}', [PermissionController::class, 'updateRole'])->name('admin.permissions.roles.update');
+Route::patch('admin/permissions/roles/{role}/toggle-permission', [PermissionController::class, 'toggleRolePermission'])->name('admin.permissions.roles.toggle-permission');
+Route::delete('admin/permissions/roles/{role}', [PermissionController::class, 'destroyRole'])->name('admin.permissions.roles.destroy');
+Route::post('admin/permissions/permissions', [PermissionController::class, 'storePermission'])->name('admin.permissions.permissions.store');
+Route::put('admin/permissions/permissions/{permission}', [PermissionController::class, 'updatePermission'])->name('admin.permissions.permissions.update');
+Route::delete('admin/permissions/permissions/{permission}', [PermissionController::class, 'destroyPermission'])->name('admin.permissions.permissions.destroy');
+Route::put('admin/permissions/users/{user}', [PermissionController::class, 'updateUserPermissions'])->name('admin.permissions.users.update');
